@@ -5,8 +5,8 @@ end
 class Array
   def hash
     hash = size
-    self.each do |el|
-      hash ^= el.hash
+    self.each_with_index do |el, i|
+      hash ^= (el.hash + i)
     end
     hash
   end
@@ -14,17 +14,12 @@ end
 
 class String
   def hash
-    hash = 0
-    m = 16
-    a = 0.5 * (Math.sqrt(5) - 1)
+    hash = size
     i = 1
     self.bytes do |byte|
-      x = (byte * a)
-      x = x.to_i
-      hash ^= (m * x).floor ^ (x % i) ^ (2 * hash / i)
+      hash ^= (byte + i).hash
       i += 1
     end
-
     hash
   end
 end
@@ -35,13 +30,12 @@ class Hash
   def hash
     hash = size
     sorted_keys = keys.sort { |a,b| a.to_s <=> b.to_s }
-    i = size + 1
+    i = 1
     sorted_keys.each do |key|
       val = self[key]
-      hash ^= key.to_s.hash ^ (val.to_s.hash + i)
-      i += 1
+      xor = ((key.to_s.hash + (3 * i)) ^ (val.to_s.hash * i))
+      hash = hash ^ xor
     end
-    p hash
     hash
   end
 end

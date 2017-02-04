@@ -15,6 +15,7 @@ class LRUCache
   end
 
   def get(key)
+
   end
 
   def to_s
@@ -25,12 +26,16 @@ class LRUCache
 
   def calc!(key)
     # suggested helper method; insert an (un-cached) key
+
   end
 
   def update_link!(link)
     # suggested helper method; move a link to the end of the list
+    link.remove
+    @store.append(link)
   end
 
   def eject!
+    @map.delete(@store.first.remove)
   end
 end
